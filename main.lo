@@ -1,0 +1,18 @@
+println("Lolang!", "red")
+
+println("A melhor linguagem de programação", "green")
+
+# print("com suporte a comentarios no codigo")
+
+println("Pessoas legais:", "magenta")
+
+print("Lia ")
+print("Lo ")
+print("Gabriel ")
+print("Olga ")
+print("Leon ")
+
+println()
+println()
+
+println("Olá mundo!", "cyan")
