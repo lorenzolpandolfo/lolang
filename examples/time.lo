@@ -1,0 +1,6 @@
+
+println("[Demonstração horário]", "&magenta")
+
+println("Horario agora: ", now())
+println("Somente ano, mês e dia: ", now("%Y-%m-%d"))
+println()

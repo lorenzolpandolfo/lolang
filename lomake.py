@@ -1,13 +1,12 @@
 import os
 import sys
-from typing import List, Callable
+from typing import List
 
 from constants.core_functions import CORE_FUNCTIONS
 from core.memory import global_variables
 from core.operators import eval_expression
 from core.variable import Variable
 from utils.interpreter_util import get_function_parameters, normalize_name
-from utils.log import log
 from enums.type import Type
 
 
@@ -26,27 +25,49 @@ def validate_args() -> str:
 
 def load_file_content(filename: str) -> None:
     with open(filename, "r") as f:
-        for line in f:
-            interpret_line_content(line)
+        lines = f.readlines()
+
+    statements = group_statements(lines)
+
+    for stmt in statements:
+        interpret_statement(stmt)
 
 
-def interpret_line_content(data: str) -> None:
-    data = data.strip()
-    if not data:
-        return
-    if data.startswith("//") or data.startswith("#"):
-        return
+def group_statements(lines: List[str]) -> List[str]:
+    statements = []
+    buffer = ""
+    open_parens = 0
 
-    for token in tokenize(data):
-        if token:
-            handle_statement(token)
+    for line in lines:
+        stripped = line.strip()
+
+        if not stripped or stripped.startswith("//") or stripped.startswith("#"):
+            continue
+
+        open_parens += stripped.count("(")
+        open_parens -= stripped.count(")")
+
+        buffer += stripped + " "
+
+        if open_parens == 0:
+            for token in tokenize(buffer):
+                if token:
+                    statements.append(token)
+            buffer = ""
+
+    if buffer:
+        for token in tokenize(buffer):
+            if token:
+                statements.append(token)
+
+    return statements
 
 
 def tokenize(data: str) -> List[str]:
     return [t.strip() for t in data.split(";")]
 
 
-def handle_statement(data: str) -> None:
+def interpret_statement(data: str) -> None:
     if handle_function_call(data):
         return
     handle_variable_assignment(data)
@@ -93,20 +114,17 @@ def handle_variable_assignment(data: str) -> bool:
 
     parts = left.strip().split(" ", 1)
 
-    # declaração: int a = 10
     if len(parts) == 2 and Type.is_valid_type(parts[0]):
         type_name, var_name = parts
         register_variable(var_name, type_name, right)
         return True
 
-    # atribuição: a = 10
     var_name = normalize_name(left)
     if var_name not in global_variables:
         raise NameError(f"Variable '{var_name}' not defined")
 
     global_variables[var_name].set_value(right)
     return True
-
 
 
 def register_variable(var_name: str, type_name: str, value) -> None:

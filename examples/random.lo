@@ -1,8 +1,13 @@
 int num_random = randint(1, 300)
-println("Primeiro:", num_random, "&blue")
+
+println("[Gerando números aleatórios com algoritmo RNG personalizado]", "&red")
+
+println("> Primeiro: ", num_random, "&blue")
 
 num_random = randint(1, 300)
-println("Segundo:", num_random, "&green")
+println("> Segundo: ", num_random, "&green")
 
 num_random = randint(1, 300)
-println("Terceiro:", num_random, "&cyan")
+println("> Terceiro: ", num_random, "&cyan")
+
+println()

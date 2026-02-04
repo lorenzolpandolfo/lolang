@@ -33,7 +33,7 @@ def extract_color(params: List[str]):
 @validate_params
 def print_impl(params: List[str]) -> None:
     params, color = extract_color(params)
-    content = " ".join(str(p) for p in params)
+    content = "".join(str(p) for p in params)
 
     if color:
         print(f"{color}{content}{Color.ENDC}", end="")
@@ -44,9 +44,19 @@ def print_impl(params: List[str]) -> None:
 @validate_params
 def println_impl(params: List[str]) -> None:
     params, color = extract_color(params)
-    content = " ".join(str(p) for p in params)
+    content = "".join(str(p) for p in params)
 
     if color:
         print(f"{color}{content}{Color.ENDC}")
     else:
         print(content)
+
+def input_impl(params):
+    params, color = extract_color(params)
+
+    prompt = "".join(str(p) for p in params)
+
+    if color:
+        return input(f"{color}{prompt}{Color.ENDC}")
+
+    return input(prompt)

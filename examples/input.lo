@@ -1,0 +1,24 @@
+println("=== Cadastro rápido ===", "&blue")
+
+string nome = input("> Qual seu nome? ", "&cyan")
+int idade = input("> E sua idade? ", "&cyan")
+
+println()
+println("Olá, ", nome, "!", "&cyan")
+println(
+    "Ano que vem você terá ",
+    idade + 1,
+    " anos.", "&blue"
+)
+
+println(
+    "Você poderá dirigir? ",
+    idade >= 18,
+    "&magenta"
+)
+
+println()
+println("=== Resumo === ", "&yellow")
+println("- Nome: ", nome)
+println("- Idade atual: ", idade)
+println("- Próxima idade: ", idade + 1)

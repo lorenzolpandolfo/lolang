@@ -1,0 +1,15 @@
+println("[Demonstrando funções de transformação de strings]\n", "&cyan")
+
+string nome = input("Seu nome: ")
+int idade = input("Sua idade: ")
+
+println("Olá, ", upper(nome), "!", "&green")
+
+println(
+    "Seu nome tem ",
+    len(nome),
+    " letras",
+    "&yellow"
+)
+
+println("seu nome em lower fica: ", lower(nome))

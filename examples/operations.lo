@@ -11,24 +11,24 @@ int b = 3
 int c = a + b
 
 println("[Soma]", "&magenta")
-println("A soma de", a, "+", b, "é igual a", c, "&green")
+println("A soma de ", a, " + ", b, " é igual a ", c, "&green")
 println()
 
 // subtração
 int c = a - b
 
 println("[Subtração]", "&magenta")
-println("O valor", a, "-", b, "é igual a", c, "&green")
+println("O valor ", a, " - ", b, " é igual a ", c, "&green")
 println()
 
 // Calculando a circunferência de um círculo
 println("[Calculando a circunferência de um círculo]", "&magenta")
-float pi = 3.14
+float pi = 3.14159
 int r = 5
 float circ = 2 * pi * r
 
-println("- Raio:", r, "&green")
-println("- Circunferência:", circ, "&green")
+println("- Raio: ", r, "cm", "&green")
+println("- Circunferência: ", circ, "cm", "&green")
 println()
 
 // Elevando ao quadrado
@@ -36,7 +36,7 @@ println("[Elevando ao quadrado]", "&magenta")
 int a = 5
 int b = 2
 int c = a ** b
-println("- O número", a, "elevado a", b, "é igual a:", c, "&yellow")
+println("- O número ", a, " elevado a ", b, " é igual a: ", c, "&yellow")
 println()
 
 // Elevando ao cubo
@@ -44,7 +44,7 @@ println("[Elevando ao cubo]", "&magenta")
 int a = 10
 int b = 3
 int c = a ** b
-println("- O número", a, "elevado a", b, "é igual a:", c, "&yellow")
+println("- O número ", a, " elevado a ", b, " é igual a: ", c, "&yellow")
 println()
 
 // Resto da divisão
@@ -52,7 +52,7 @@ println("[Resto da divisão]", "&magenta")
 int a = 10
 int b = 2
 int c = a % b
-println("- O resto da divisão de", a, "/", b, "é igual a:", c, "&magenta")
+println("- O resto da divisão de ", a, "/", b, " é igual a: ", c, "&magenta")
 println()
 
 println("[Raízes]", "&magenta")
@@ -61,114 +61,113 @@ println("[Raízes]", "&magenta")
 int a = 16
 int b = 2
 float c = a $ b
-println("- A raiz quadrada de", a, "é igual a:", c, "&magenta")
+println("- A raiz quadrada de ", a, " é igual a: ", c, "&magenta")
 
 // raiz cúbica
 int a = 16
 int b = 3
 float c = a $ b
-println("- A raiz cúbica de", a, "é igual a:", c, "&magenta")
+println("- A raiz cúbica de ", a, " é igual a: ", c, "&magenta")
 println()
-
 // Comparações
 println("[Comparações de inteiros]", "&yellow")
 
 int a = 10 != 10
-println(a, "&green")
+println("10 != 10 ? ", a, "&green")
 
 int a = 10 == 10
-println(a, "&green")
+println("10 == 10 ? ", a, "&green")
 
 int a = 10 >= 10
-println(a, "&green")
+println("10 >= 10 ? ", a, "&green")
 
 int a = 10 > 10
-println(a, "&green")
+println("10 > 10  ? ", a, "&green")
 
 int a = 10 < 10
-println(a, "&green")
+println("10 < 10  ? ", a, "&green")
 
 int a = 10 <= 10
-println(a, "&green")
+println("10 <= 10 ? ", a, "&green")
 
 println()
 println("[Comparações de booleanos]", "&yellow")
 
 boolean a = 10 == 10
-println(a, "&green")
+println("10 == 10 ? ", a, "&green")
 
 boolean a = 10 >= 10
-println(a, "&green")
+println("10 >= 10 ? ", a, "&green")
 
 boolean a = 10 > 10
-println(a, "&green")
+println("10 > 10  ? ", a, "&green")
 
 boolean a = 10 < 10
-println(a, "&green")
+println("10 < 10  ? ", a, "&green")
 
 boolean a = 10 <= 10
-println(a, "&green")
+println("10 <= 10 ? ", a, "&green")
 
 println()
 println("[Comparações de floats]", "&yellow")
 
 float a = 10 == 10
-println(a, "&green")
+println("10 == 10 ? ", a, "&green")
+
 
 float a = 10 >= 10
-println(a, "&green")
+println("10 >= 10 ? ", a, "&green")
 
 float a = 10 > 10
-println(a, "&green")
+println("10 > 10  ? ", a, "&green")
 
 float a = 10 < 10
-println(a, "&green")
+println("10 < 10  ? ", a, "&green")
 
 float a = 10 <= 10
-println(a, "&green")
+println("10 <= 10 ? ", a, "&green")
 
-println()
-println("[Operadores lógicos: && / and]", "&yellow")
+println("\n[Operadores lógicos: && / and]", "&yellow")
 
 int c = 1 && 1
-println("1 && 1 =", c, "&green")
+println("1 && 1 = ", c, "&green")
 
 int c = 1 && 0
-println("1 && 0 =", c, "&green")
+println("1 && 0 = ", c, "&green")
 
 int c = 0 && 1
-println("0 && 1 =", c, "&green")
+println("0 && 1 = ", c, "&green")
 
 int c = 0 && 0
-println("0 && 0 =", c, "&green")
+println("0 && 0 = ", c, "&green")
 
 println()
 println("[Operadores lógicos: || / or]", "&yellow")
 
 int c = 1 || 1
-println("1 || 1 =", c, "&green")
+println("1 || 1 = ", c, "&green")
 
 int c = 1 || 0
-println("1 || 0 =", c, "&green")
+println("1 || 0 = ", c, "&green")
 
 int c = 0 || 1
-println("0 || 1 =", c, "&green")
+println("0 || 1 = ", c, "&green")
 
 int c = 0 || 0
-println("0 || 0 =", c, "&green")
+println("0 || 0 = ", c, "&green")
 
 println()
 println("[Operador === : igual independente do tipo]", "&yellow")
 
 boolean c = 3 === "3"
-println("3 === '3' =", c, "&green")
+println("3 === '3' = ", c, "&green")
 
 boolean c = 3 !== "3"
-println("3 !== '3' =", c, "&green")
+println("3 !== '3' = ", c, "&green")
 println()
 
 boolean c = "Joao" === "3"
-println("Joao === '3' =", c, "&green")
+println("Joao === '3' = ", c, "&green")
 
 boolean c = "Joao" === "Joao"
-println("Joao === 'Joao' =", c, "&green")
+println("Joao === 'Joao' = ", c, "&green")
