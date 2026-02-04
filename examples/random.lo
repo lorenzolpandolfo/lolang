@@ -1,0 +1,5 @@
+
+int num_random = randint(1, 300)
+println(num_random, "blue")
+//println(num_random, "blue")
+//println(num_random, "blue")

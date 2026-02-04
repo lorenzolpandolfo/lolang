@@ -1,0 +1,226 @@
+// operadores aritméticos: + - / * ** % $ ($ customizado, para raiz)
+
+// operadores de comparacao: != == === (=== customizado, para comparação sem considerar o tipo do dado)
+
+// operadores lógicos: && ||
+
+println("[Realizando operações aritméticas com variáveis]\n", "red")
+
+// soma
+int a = 5
+int b = 3
+int c = a + b
+
+println("[Soma]", "magenta")
+print("A soma de ")
+print(a)
+print(" + ")
+print(b)
+print(" é igual a ")
+println(c, "green")
+println()
+
+// subtração
+int c = a - b
+
+println("[Subtração]", "magenta")
+print("O valor ")
+print(a)
+print(" - ")
+print(b)
+print(" é igual a ")
+println(c, "green")
+println()
+
+
+// Calculando a circunferência de um círculo
+println("[Calculando a circunferência de um círculo]", "magenta")
+float pi = 3.14
+int r = 5
+float circ = 2 * pi * r
+
+print("- Raio: ")
+println(r, "green")
+
+print("- Circunferência: ")
+println(circ, "green")
+println()
+
+
+// Elevando ao quadrado
+println("[Elevando ao quadrado]", "magenta")
+int a = 5
+int b = 2
+int c = a ** b
+print("- O número ")
+print(a)
+print(" elevado a ")
+print(b)
+print(" é igual a: ")
+println(c, "yellow")
+println()
+
+
+// Elevando ao cubo
+println("[Elevando ao cubo]", "magenta")
+int a = 10
+int b = 3
+int c = a ** b
+print("- O número ")
+print(a)
+print(" elevado a ")
+print(b)
+print(" é igual a: ")
+println(c, "yellow")
+println()
+
+
+// Resto da divisão
+println("[Resto da divisão]", "magenta")
+int a = 10
+int b = 2
+int c = a % b
+print("- O resto da divisão de ")
+print(a)
+print(" / ")
+print(b)
+print(" é igual a: ")
+println(c, "magenta")
+println()
+
+
+println("[Raízes]", "magenta")
+
+// raiz quadrada
+int a = 16
+int b = 2
+float c = a $ b
+print("- A raiz quadrada de ")
+print(a)
+print(" é igual a: ")
+println(c, "magenta")
+
+// raiz cúbica
+int a = 16
+int b = 3
+float c = a $ b
+print("- A raiz cúbica de ")
+print(a)
+print(" é igual a: ")
+println(c, "magenta")
+println()
+
+
+// Comparações
+println()
+println("[Comparações de inteiros]", "yellow")
+int a = 10 != 10
+println(a, "green")
+
+int a = 10 == 10
+println(a, "green")
+
+int a = 10 >= 10
+println(a, "green")
+
+int a = 10 > 10
+println(a, "green")
+
+int a = 10 < 10
+println(a, "green")
+
+int a = 10 <= 10
+println(a, "green")
+
+println()
+println("[Comparações de booleanos]", "yellow")
+boolean a = 10 == 10
+println(a, "green")
+
+boolean a = 10 >= 10
+println(a, "green")
+
+boolean a = 10 > 10
+println(a, "green")
+
+boolean a = 10 < 10
+println(a, "green")
+
+boolean a = 10 <= 10
+println(a, "green")
+
+
+println()
+println("[Comparações de floats]", "yellow")
+float a = 10 == 10
+println(a, "green")
+
+float a = 10 >= 10
+println(a, "green")
+
+float a = 10 > 10
+println(a, "green")
+
+float a = 10 < 10
+println(a, "green")
+
+float a = 10 <= 10
+println(a, "green")
+
+println()
+println("[Operadores lógicos: &&/and]", "yellow")
+int c = 1 && 1
+print("1 && 1 = ")
+println(c, "green")
+
+int c = 1 && 0
+print("1 && 0 = ")
+println(c, "green")
+
+int c = 0 && 1
+print("0 && 1 = ")
+println(c, "green")
+
+int c = 0 && 0
+print("0 && 0 = ")
+println(c, "green")
+
+
+println()
+println("[Operadores lógicos: ||/or]", "yellow")
+int c = 1 || 1
+print("1 || 1 = ")
+println(c, "green")
+
+int c = 1 || 0
+print("1 || 0 = ")
+println(c, "green")
+
+int c = 0 || 1
+print("0 || 1 = ")
+println(c, "green")
+
+int c = 0 || 0
+print("0 || 0 = ")
+println(c, "green")
+
+println()
+println("[Operador === : igual independente do tipo]", "yellow")
+boolean c = 3 === "3"
+print("3 === '3' = ")
+println(c, "green")
+
+boolean c = 3 !== "3"
+print("3 !== '3' = ")
+println(c, "green")
+println()
+
+boolean c = "Joao" === "3"
+print("Joao === '3' = ")
+println(c, "green")
+
+
+boolean c = "Joao" === "Joao"
+print("Joao === Joao = ")
+println(c, "green")
+

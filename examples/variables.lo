@@ -1,0 +1,51 @@
+// tipos: string, int, float, boolean
+
+println("[Definindo valor de variáveis em Lolang]", "red");
+
+// definindo valores iniciais
+string name = "Lorenzo";
+int age = 21;
+float height = 1.67
+boolean programming = true
+
+
+// imprimindo valores
+print("- Nome: ");
+println(name, "blue")
+
+print("- Idade: ");
+println(age, "green")
+
+print("- Altura: ");
+println(height, "red")
+
+print("- Está programando? ");
+println(programming, "magenta")
+
+
+// alterando o valor da varíavel idade
+println()
+println("O tempo passou... ", "yellow")
+print(name)
+println(" envelheceu 1 ano!", "yellow")
+int age = 22;
+
+
+// exibindo valor de idade alterado
+print("- Idade: ");
+println(age, "green")
+println()
+
+
+// exibindo texto formatado
+print(name)
+print(" tem ")
+print(age)
+print(" anos e ")
+print(height)
+print("m de altura, e neste momento está programando? ")
+print(programming)
+print("!")
+
+println()
+println()

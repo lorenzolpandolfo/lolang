@@ -2,17 +2,16 @@ println("Lolang!", "red")
 
 println("A melhor linguagem de programação", "green")
 
-# print("com suporte a comentarios no codigo")
+// print("com suporte a comentários no código")
 
-println("Pessoas legais:", "magenta")
+println("\nPessoas legais:", "magenta")
 
 print("Lia ")
-print("Lo ")
+print("Lo\n")
 print("Gabriel ")
 print("Olga ")
 print("Leon ")
 
-println()
-println()
+print("\n")
 
-println("Olá mundo!", "cyan")
+println("\nOlá, mundo!", "cyan")
