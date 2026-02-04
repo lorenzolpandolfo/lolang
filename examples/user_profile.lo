@@ -1,0 +1,34 @@
+println("=== Sistema de Acesso ===", "&cyan")
+println()
+
+string nome = input("Nome: ")
+int idade = input("Idade: ")
+
+println()
+println("Olá, ", nome, "!", "&green")
+println("Analisando seu perfil...", "&yellow")
+println()
+
+if idade < 12 {
+    println("Perfil: Criança", "&blue")
+    println("Acesso limitado ao sistema", "&blue")
+} else {
+    if idade < 18 {
+        println("Perfil: Adolescente", "&magenta")
+        println("Acesso parcial liberado", "&magenta")
+    } else {
+        println("Perfil: Adulto", "&green")
+        println("Acesso total liberado", "&green")
+    }
+}
+
+println()
+println("Resumo:", "&yellow")
+println("- Nome: ", nome)
+println("- Idade: ", idade)
+
+if idade >= 18 {
+    println("- Pode beber: sim", "&green")
+} else {
+    println("- Pode beber: não", "&red")
+}

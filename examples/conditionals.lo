@@ -1,0 +1,9 @@
+int idade = input("Idade: ")
+
+if idade >= 18 {
+    println("Pode dirigir", "&green")
+} else {
+    println("Não pode dirigir", "&red")
+}
+
+println("Fim do programa")

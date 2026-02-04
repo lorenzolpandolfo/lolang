@@ -29,9 +29,15 @@ def load_file_content(filename: str) -> None:
 
     statements = group_statements(lines)
 
-    for stmt in statements:
-        interpret_statement(stmt)
+    i = 0
+    while i < len(statements):
+        stmt = statements[i]
 
+        if stmt.startswith("if"):
+            i = handle_if_statement(statements, i)
+        else:
+            interpret_statement(stmt)
+            i += 1
 
 def group_statements(lines: List[str]) -> List[str]:
     statements = []
@@ -44,16 +50,31 @@ def group_statements(lines: List[str]) -> List[str]:
         if not stripped or stripped.startswith("//") or stripped.startswith("#"):
             continue
 
-        open_parens += stripped.count("(")
-        open_parens -= stripped.count(")")
+        stripped = stripped.replace("} else {", "}\nelse {")
 
-        buffer += stripped + " "
+        for part in stripped.splitlines():
+            part = part.strip()
 
-        if open_parens == 0:
-            for token in tokenize(buffer):
-                if token:
-                    statements.append(token)
-            buffer = ""
+            if part == "{" or part == "}":
+                if buffer:
+                    for token in tokenize(buffer):
+                        if token:
+                            statements.append(token)
+                    buffer = ""
+
+                statements.append(part)
+                continue
+
+            open_parens += part.count("(")
+            open_parens -= part.count(")")
+
+            buffer += part + " "
+
+            if open_parens == 0:
+                for token in tokenize(buffer):
+                    if token:
+                        statements.append(token)
+                buffer = ""
 
     if buffer:
         for token in tokenize(buffer):
@@ -61,6 +82,72 @@ def group_statements(lines: List[str]) -> List[str]:
                 statements.append(token)
 
     return statements
+
+
+
+def collect_block(statements: List[str], start: int):
+    block = []
+    depth = 0
+    i = start
+
+    while i < len(statements):
+        stmt = statements[i]
+
+        if stmt.endswith("{"):
+            depth += 1
+
+        if stmt == "}":
+            if depth == 0:
+                return block, i + 1
+            depth -= 1
+
+        block.append(stmt)
+        i += 1
+
+    raise SyntaxError("Missing '}'")
+
+
+def handle_if_statement(statements: List[str], index: int) -> int:
+    line = statements[index]
+
+    condition = line[2:].strip()
+
+    if not condition.endswith("{"):
+        raise SyntaxError("Expected '{' after if condition")
+
+    condition = condition[:-1].strip()
+    result = eval_expression(condition)
+
+    true_block, i = collect_block(statements, index + 1)
+
+    false_block = []
+    if i < len(statements) and statements[i].startswith("else"):
+        else_line = statements[i]
+
+        if not else_line.endswith("{"):
+            raise SyntaxError("Expected '{' after else")
+
+        false_block, i = collect_block(statements, i + 1)
+
+    block = true_block if result else false_block
+
+    # for stmt in block:
+    #     interpret_statement(stmt)
+
+    execute_block(block)
+
+    return i
+
+def execute_block(statements: List[str]) -> None:
+    i = 0
+    while i < len(statements):
+        stmt = statements[i]
+
+        if stmt.startswith("if"):
+            i = handle_if_statement(statements, i)
+        else:
+            interpret_statement(stmt)
+            i += 1
 
 
 def tokenize(data: str) -> List[str]:
