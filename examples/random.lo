@@ -1,5 +1,8 @@
-
 int num_random = randint(1, 300)
-println(num_random, "blue")
-//println(num_random, "blue")
-//println(num_random, "blue")
+println("Primeiro:", num_random, "&blue")
+
+num_random = randint(1, 300)
+println("Segundo:", num_random, "&green")
+
+num_random = randint(1, 300)
+println("Terceiro:", num_random, "&cyan")

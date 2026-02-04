@@ -1,42 +1,52 @@
 from typing import List, Callable
-
 from enums.color import Color
-from utils.interpreter_util import sanitize_parameter
-from utils.log import log
 
 
 def validate_params(func: Callable) -> Callable:
     def wrapper(params, *args, **kwargs):
-        if not params:
-            return None
-
         return func(params, *args, **kwargs)
-
     return wrapper
 
 
-def println_impl(params: List[str]) -> None:
+def sanitize_parameter(param: str) -> str:
+    return param.strip().replace('"', "")
+
+
+def extract_color(params: List[str]):
     if not params:
-        print()
-        return
+        return params, None
 
-    content = params[0]
+    last = params[-1]
 
-    if len(params) == 1:
-        print(content)
-        return
+    if isinstance(last, str) and last.startswith("&"):
+        color_name = sanitize_parameter(last[1:].upper())
+        try:
+            return params[:-1], Color[color_name]
+        except KeyError:
+            raise ValueError(
+                f"[print] invalid color {color_name}. Must be RED, GREEN, YELLOW, BLUE, MAGENTA or CYAN."
+            )
 
-    color = params[1]
-    color = sanitize_parameter(color.upper())
-
-    try:
-        color = Color[color]
-        print(f"{color}{content}{Color.ENDC}")
-
-    except KeyError:
-        raise ValueError(f"[println] invalid color {color}. Must be RED, GREEN, YELLOW, BLUE, MAGENTA or CYAN.")
+    return params, None
 
 
 @validate_params
 def print_impl(params: List[str]) -> None:
-    print(params[0], end="")
+    params, color = extract_color(params)
+    content = " ".join(str(p) for p in params)
+
+    if color:
+        print(f"{color}{content}{Color.ENDC}", end="")
+    else:
+        print(content, end="")
+
+
+@validate_params
+def println_impl(params: List[str]) -> None:
+    params, color = extract_color(params)
+    content = " ".join(str(p) for p in params)
+
+    if color:
+        print(f"{color}{content}{Color.ENDC}")
+    else:
+        print(content)

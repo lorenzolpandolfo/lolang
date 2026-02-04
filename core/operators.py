@@ -1,6 +1,7 @@
 import ast
 
 from core.memory import global_variables
+from constants.core_functions import CORE_FUNCTIONS
 from utils.log import log
 
 
@@ -87,19 +88,26 @@ def _eval_node(node):
         raise ValueError("Unsupported boolean operator")
 
     if isinstance(node, ast.Call):
-        if node.func.id == "root":
-            value = _eval_node(node.args[0])
-            degree = _eval_node(node.args[1])
+        func_name = node.func.id
+
+        args = [_eval_node(arg) for arg in node.args]
+
+        if func_name == "root":
+            value, degree = args
             return value ** (1 / degree)
 
-        if node.func.id == "equals_ignore_type":
-            a = _eval_node(node.args[0])
-            b = _eval_node(node.args[1])
+        if func_name == "equals_ignore_type":
+            a, b = args
             return str(a) == str(b)
 
-        if node.func.id == "not_equals_ignore_type":
-            a = _eval_node(node.args[0])
-            b = _eval_node(node.args[1])
+        if func_name == "not_equals_ignore_type":
+            a, b = args
             return str(a) != str(b)
+
+
+        if func_name in CORE_FUNCTIONS:
+            return CORE_FUNCTIONS[func_name](args)
+
+        raise ValueError(f"Unknown function '{func_name}'")
 
     raise ValueError("Unsupported expression")

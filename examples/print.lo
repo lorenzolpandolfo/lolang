@@ -1,10 +1,10 @@
-println("Lolang!", "red")
+println("Lolang!", "&red")
 
-println("A melhor linguagem de programação", "green")
+println("A melhor linguagem de programação", "&green")
 
 // print("com suporte a comentários no código")
 
-println("\nPessoas legais:", "magenta")
+println("\nPessoas legais:", "&magenta")
 
 print("Lia ")
 print("Lo\n")
@@ -14,4 +14,4 @@ print("Leon ")
 
 print("\n")
 
-println("\nOlá, mundo!", "cyan")
+println("\nOlá, mundo!", "&cyan")
