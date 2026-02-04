@@ -1,10 +1,9 @@
-from datetime import datetime
-from typing import List
+from time import sleep
+from typing import List, Any
 
 
-def now_impl(params: List[str]):
+def sleep_impl(params: List[Any]) -> None:
+    if len(params) == 0:
+        return
 
-    if params is None or len(params) == 0:
-       return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    return datetime.now().strftime(params[0])
+    sleep(params[0])

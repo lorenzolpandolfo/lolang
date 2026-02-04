@@ -5,21 +5,22 @@ from typing import List
 from constants.core_functions import CORE_FUNCTIONS
 from core.memory import global_variables
 from core.operators import eval_expression
-from core.variable import Variable
+from core.objects.variable import Variable
 from utils.interpreter_util import get_function_parameters, normalize_name
 from enums.type import Type
+from utils.log import log
 
 
-def validate_file(filename: str) -> None:
-    if not (os.path.isfile(filename) and os.access(filename, os.R_OK) and filename.endswith(".lo")):
-        raise FileNotFoundError(filename)
+def _validate_file(file: str) -> None:
+    if not (os.path.isfile(file) and os.access(file, os.R_OK) and file.endswith(".lo")):
+        raise FileNotFoundError(file)
 
 
-def validate_args() -> str:
+def _validate_args() -> str:
     args = sys.argv[1:]
     if len(args) != 1:
         raise FileNotFoundError("Invalid number of arguments")
-    validate_file(args[0])
+    _validate_file(args[0])
     return args[0]
 
 
@@ -35,6 +36,10 @@ def load_file_content(filename: str) -> None:
 
         if stmt.startswith("if"):
             i = handle_if_statement(statements, i)
+        elif stmt.startswith("while"):
+            i = handle_while_statement(statements, i)
+        elif stmt.startswith("for"):
+            i = handle_for_statement(statements, i)
         else:
             interpret_statement(stmt)
             i += 1
@@ -55,14 +60,11 @@ def group_statements(lines: List[str]) -> List[str]:
         for part in stripped.splitlines():
             part = part.strip()
 
-            if part == "{" or part == "}":
+            if part == "}":
                 if buffer:
-                    for token in tokenize(buffer):
-                        if token:
-                            statements.append(token)
+                    statements.append(buffer.strip())
                     buffer = ""
-
-                statements.append(part)
+                statements.append("}")
                 continue
 
             open_parens += part.count("(")
@@ -70,16 +72,13 @@ def group_statements(lines: List[str]) -> List[str]:
 
             buffer += part + " "
 
-            if open_parens == 0:
-                for token in tokenize(buffer):
-                    if token:
-                        statements.append(token)
+            # 🔑 só fecha o statement se NÃO estivermos esperando um {
+            if open_parens == 0 and not buffer.strip().startswith(("for ", "if ", "while ")) or buffer.strip().endswith("{"):
+                statements.append(buffer.strip())
                 buffer = ""
 
     if buffer:
-        for token in tokenize(buffer):
-            if token:
-                statements.append(token)
+        statements.append(buffer.strip())
 
     return statements
 
@@ -130,13 +129,48 @@ def handle_if_statement(statements: List[str], index: int) -> int:
         false_block, i = collect_block(statements, i + 1)
 
     block = true_block if result else false_block
-
-    # for stmt in block:
-    #     interpret_statement(stmt)
-
     execute_block(block)
-
     return i
+
+def handle_while_statement(statements: List[str], index: int) -> int:
+    line = statements[index]
+    condition = line[5:].strip()
+
+    if not condition.endswith("{"):
+        raise SyntaxError("Expected '{' after while condition")
+
+    condition = condition[:-1].strip()
+    block, end = collect_block(statements, index + 1)
+
+    while eval_expression(condition):
+        execute_block(block)
+
+    return end
+
+def handle_for_statement(statements: List[str], index: int) -> int:
+    line = statements[index]
+    header = line[3:].strip()
+
+
+    if not header.endswith("{"):
+        raise SyntaxError("Expected '{' after for header")
+
+    header = header[:-1].strip()
+
+    try:
+        init, condition, increment = [p.strip() for p in header.split(";")]
+    except ValueError:
+        raise SyntaxError("Invalid for syntax")
+
+    block, end = collect_block(statements, index + 1)
+    interpret_statement(init)
+
+    while eval_expression(condition):
+        execute_block(block)
+        interpret_statement(increment)
+
+    return end
+
 
 def execute_block(statements: List[str]) -> None:
     i = 0
@@ -222,5 +256,5 @@ def register_variable(var_name: str, type_name: str, value) -> None:
 
 
 if __name__ == "__main__":
-    filename = validate_args()
+    filename = _validate_args()
     load_file_content(filename)

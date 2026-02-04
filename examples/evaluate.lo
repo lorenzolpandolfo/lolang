@@ -1,0 +1,6 @@
+
+println("[Exemplo evaluate: rodar código Python]", "&magenta")
+evaluate("print('Python diz: Olá, mundo!', 3 + 3 + 3)")
+
+int v = evaluate("abs(1.3252)")
+println(v)

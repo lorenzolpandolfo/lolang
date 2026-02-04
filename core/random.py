@@ -10,11 +10,10 @@ def _lcg(modulus: int, a: int, c: int, seed: int) -> Generator[int, None, None]:
         seed = (a * seed + c) % modulus
         yield seed
 
-rng = _lcg(2 ** 32, 1664525, 1013904223, time.time_ns())
+_rng = _lcg(2 ** 32, 1664525, 1013904223, time.time_ns())
 
 def randint_impl(params: List[int]):
     a = params[0]
     b = params[1]
-    c = a + (next(rng) % (b - a + 1))
+    c = a + (next(_rng) % (b - a + 1))
     return c
-

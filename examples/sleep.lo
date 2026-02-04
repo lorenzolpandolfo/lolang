@@ -1,0 +1,15 @@
+int time = 3;
+
+println("Iniciando contagem...", "&magenta")
+
+sleep(1)
+println("- três...", "&red")
+
+sleep(1)
+println("- dois...", "&red")
+
+sleep(1)
+println("- um...", "&red")
+
+sleep(1)
+println("Programa finalizado!", "&magenta")

@@ -33,6 +33,9 @@ def _eval_node(node):
         return node.value
 
     if isinstance(node, ast.Name):
+        if node.id.lower() == "true" or node.id.lower() == "false":
+            return bool(node.id)
+
         var = global_variables.get(node.id)
         if not var:
             raise ValueError(f"Variable '{node.id}' not defined")

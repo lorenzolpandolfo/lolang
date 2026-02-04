@@ -7,9 +7,21 @@ println("Olá, ", upper(nome), "!", "&green")
 
 println(
     "Seu nome tem ",
-    len(nome),
+    length(nome),
     " letras",
     "&yellow"
 )
 
 println("seu nome em lower fica: ", lower(nome))
+println("seu nome em upper fica: ", upper(nome))
+
+println()
+
+string name = lower("Lorenzo")
+string n = lower("Enzo")
+
+println(n + " está contido em Lorenzo? ", contains(n, name))
+
+n = "Maria"
+
+println(n + " está contido em Lorenzo? ", contains(n, name))

@@ -1,4 +1,4 @@
 
-from core.variable import Variable
+from core.objects.variable import Variable
 
 global_variables: dict[str, Variable] = {}

@@ -1,5 +1,4 @@
-println("=== Sistema de Acesso ===", "&cyan")
-println()
+println("=== Sistema de Acesso ===\n", "&cyan")
 
 string nome = input("Nome: ")
 int idade = input("Idade: ")
@@ -22,8 +21,7 @@ if idade < 12 {
     }
 }
 
-println()
-println("Resumo:", "&yellow")
+println("\nResumo:", "&yellow")
 println("- Nome: ", nome)
 println("- Idade: ", idade)
 

@@ -1,0 +1,21 @@
+println("Contagem regressiva", "&cyan")
+
+int i = 5
+
+while i > 0 {
+    println(i, "&yellow")
+    i = i - 1
+    sleep(0.5)
+}
+
+println("Boom!\n", "&red")
+
+println("Tabuada do 3", "&magenta")
+for i = 1; i <= 10; i = i + 1 {
+    println("3 x ", i, " = ", 3 * i)
+}
+
+println("\nTabuada do 5", "&magenta")
+for int x = 1; x <= 10; x = x + 1 {
+    println("5 x ", x, " = ", 5 * x)
+}

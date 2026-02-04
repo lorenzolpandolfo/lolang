@@ -1,0 +1,10 @@
+string name = "Lia"
+int age = 21
+float height = 1.70
+boolean is_woman = true
+
+println("[Tipos de variáveis]", "&magenta")
+println("- O tipo da variável name é: ", typeof(name), "&green")
+println("- O tipo da variável age é: ", typeof(age), "&green")
+println("- O tipo da variável height é: ", typeof(height), "&green")
+println("- O tipo da variável is_woman é: ", typeof(is_woman), "&green")
