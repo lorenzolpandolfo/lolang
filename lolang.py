@@ -3,12 +3,14 @@ import sys
 from typing import List
 
 from constants.core_functions import CORE_FUNCTIONS
+from core.exceptions.break_loop_exception import BreakLoopException
 from core.memory import global_variables
 from core.operators import eval_expression
 from core.objects.variable import Variable
-from utils.interpreter_util import get_function_parameters, normalize_name
 from enums.type import Type
+from utils.interpreter_util import get_function_parameters
 from utils.log import log
+from utils.string_utils import normalize_name
 
 
 def _validate_file(file: str) -> None:
@@ -72,7 +74,6 @@ def group_statements(lines: List[str]) -> List[str]:
 
             buffer += part + " "
 
-            # 🔑 só fecha o statement se NÃO estivermos esperando um {
             if open_parens == 0 and not buffer.strip().startswith(("for ", "if ", "while ")) or buffer.strip().endswith("{"):
                 statements.append(buffer.strip())
                 buffer = ""
@@ -81,29 +82,6 @@ def group_statements(lines: List[str]) -> List[str]:
         statements.append(buffer.strip())
 
     return statements
-
-
-
-def collect_block(statements: List[str], start: int):
-    block = []
-    depth = 0
-    i = start
-
-    while i < len(statements):
-        stmt = statements[i]
-
-        if stmt.endswith("{"):
-            depth += 1
-
-        if stmt == "}":
-            if depth == 0:
-                return block, i + 1
-            depth -= 1
-
-        block.append(stmt)
-        i += 1
-
-    raise SyntaxError("Missing '}'")
 
 
 def handle_if_statement(statements: List[str], index: int) -> int:
@@ -143,7 +121,10 @@ def handle_while_statement(statements: List[str], index: int) -> int:
     block, end = collect_block(statements, index + 1)
 
     while eval_expression(condition):
-        execute_block(block)
+        try:
+            execute_block(block)
+        except BreakLoopException:
+            break
 
     return end
 
@@ -166,10 +147,35 @@ def handle_for_statement(statements: List[str], index: int) -> int:
     interpret_statement(init)
 
     while eval_expression(condition):
-        execute_block(block)
-        interpret_statement(increment)
+        try:
+            execute_block(block)
+            interpret_statement(increment)
+        except BreakLoopException:
+            break
 
     return end
+
+
+def collect_block(statements: List[str], start: int):
+    block = []
+    depth = 0
+    i = start
+
+    while i < len(statements):
+        stmt = statements[i]
+
+        if stmt.endswith("{"):
+            depth += 1
+
+        if stmt == "}":
+            if depth == 0:
+                return block, i + 1
+            depth -= 1
+
+        block.append(stmt)
+        i += 1
+
+    raise SyntaxError("Missing '}'")
 
 
 def execute_block(statements: List[str]) -> None:
@@ -184,13 +190,13 @@ def execute_block(statements: List[str]) -> None:
             i += 1
 
 
-def tokenize(data: str) -> List[str]:
-    return [t.strip() for t in data.split(";")]
-
-
 def interpret_statement(data: str) -> None:
+    if data.strip() == "break":
+        raise BreakLoopException()
+
     if handle_function_call(data):
         return
+
     handle_variable_assignment(data)
 
 
@@ -227,10 +233,10 @@ def handle_function_call(data: str) -> bool:
 
 
 def handle_variable_assignment(data: str) -> bool:
-    if " = " not in data:
+    if "=" not in data:
         return False
 
-    left, right = data.split(" = ", 1)
+    left, right = data.split("=", 1)
     right = eval_expression(right.strip())
 
     parts = left.strip().split(" ", 1)

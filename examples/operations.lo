@@ -171,3 +171,11 @@ println("Joao === '3' = ", c, "&green")
 
 boolean c = "Joao" === "Joao"
 println("Joao === 'Joao' = ", c, "&green")
+
+println()
+println("[Operador not : negação]", "&yellow")
+
+boolean c = true
+println("not true  = ", not c, "&green")
+boolean c = false
+println("not false = ", not c, "&green")

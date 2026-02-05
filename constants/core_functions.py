@@ -1,3 +1,4 @@
+from core.array import push_impl, pop_impl, reverse_impl
 from core.io import println_impl, print_impl, input_impl
 from core.math import abs_impl, round_impl
 from core.random import randint_impl
@@ -31,6 +32,11 @@ CORE_FUNCTIONS = {
 
     # utils
     "typeof": typeof_impl,
-    "evaluate": evaluate_impl
+    "evaluate": evaluate_impl,
+
+    # array
+    "push": push_impl,
+    "pop": pop_impl,
+    "reverse": reverse_impl
 
 }

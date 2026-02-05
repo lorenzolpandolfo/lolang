@@ -10,6 +10,7 @@ class Type(Enum):
     BOOLEAN = "boolean"
     FLOAT = "float"
     INT = "int"
+    ARRAY = "array"
 
     @classmethod
     def is_valid_type(cls, v_type: str) -> bool:
@@ -28,7 +29,9 @@ class Type(Enum):
 
             case self.BOOLEAN.value:
                 return bool(v_value)
-                # return v_value.lower() == "true"
+
+            case self.ARRAY.value:
+                return list(v_value)
 
             case _:
                 return None
@@ -38,11 +41,18 @@ class Type(Enum):
         match self.value:
             case self.STRING.value:
                 return str
+
             case self.BOOLEAN.value:
                 return bool
+
             case self.FLOAT.value:
                 return float
+
             case self.INT.value:
                 return int
+
+            case self.ARRAY.value:
+                return list
+
             case _:
                 return None

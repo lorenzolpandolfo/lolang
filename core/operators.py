@@ -1,4 +1,5 @@
 import ast
+import re
 
 from core.memory import global_variables
 from constants.core_functions import CORE_FUNCTIONS
@@ -7,12 +8,12 @@ from utils.log import log
 
 def eval_expression(expr: str):
     node = ast.parse(preprocess(expr), mode="eval")
-    return _eval_node(node.body)
+    return interpret_node(node.body)
 
 def preprocess(expr: str) -> str:
     expr = expr.replace("&&", " and ")
     expr = expr.replace("||", " or ")
-    # expr = expr.replace(" ! ", " not ")
+    # expr = re.sub(r'!(?!=)', ' not ', expr)
 
     if "===" in expr:
         a, b = expr.split("===", 1)
@@ -28,13 +29,15 @@ def preprocess(expr: str) -> str:
     return expr
 
 
-def _eval_node(node):
+def interpret_node(node):
     if isinstance(node, ast.Constant):
         return node.value
 
     if isinstance(node, ast.Name):
-        if node.id.lower() == "true" or node.id.lower() == "false":
-            return bool(node.id)
+        if node.id.lower() == "true":
+            return True
+        elif node.id.lower() == "false":
+            return False
 
         var = global_variables.get(node.id)
         if not var:
@@ -42,9 +45,8 @@ def _eval_node(node):
         return var.value
 
     if isinstance(node, ast.BinOp):
-        left = _eval_node(node.left)
-        right = _eval_node(node.right)
-
+        left = interpret_node(node.left)
+        right = interpret_node(node.right)
 
         if isinstance(node.op, ast.Add):
             return left + right
@@ -58,12 +60,11 @@ def _eval_node(node):
             return left ** right
         if isinstance(node.op, ast.Mod):
             return left % right
-
         raise ValueError("Unsupported operator")
 
     if isinstance(node, ast.Compare):
-        left = _eval_node(node.left)
-        right = _eval_node(node.comparators[0])
+        left = interpret_node(node.left)
+        right = interpret_node(node.comparators[0])
         op = node.ops[0]
 
         if isinstance(op, ast.Eq):
@@ -83,17 +84,16 @@ def _eval_node(node):
 
     if isinstance(node, ast.BoolOp):
         if isinstance(node.op, ast.And):
-            return all(_eval_node(v) for v in node.values)
+            return all(interpret_node(v) for v in node.values)
 
         if isinstance(node.op, ast.Or):
-            return any(_eval_node(v) for v in node.values)
+            return any(interpret_node(v) for v in node.values)
 
         raise ValueError("Unsupported boolean operator")
 
     if isinstance(node, ast.Call):
         func_name = node.func.id
-
-        args = [_eval_node(arg) for arg in node.args]
+        args = [interpret_node(arg) for arg in node.args]
 
         if func_name == "root":
             value, degree = args
@@ -107,10 +107,31 @@ def _eval_node(node):
             a, b = args
             return str(a) != str(b)
 
-
         if func_name in CORE_FUNCTIONS:
             return CORE_FUNCTIONS[func_name](args)
 
         raise ValueError(f"Unknown function '{func_name}'")
+
+    if isinstance(node, ast.List):
+        return [interpret_node(el) for el in node.elts]
+
+    if isinstance(node, ast.Subscript):
+        value = interpret_node(node.value)
+        index = interpret_node(node.slice)
+        return value[index]
+
+    if isinstance(node, ast.UnaryOp):
+        value = interpret_node(node.operand)
+
+        if isinstance(node.op, ast.Not):
+            return not value
+
+        if isinstance(node.op, ast.USub):
+            return not -value
+
+        if isinstance(node.op, ast.UAdd):
+            return +value
+
+        raise ValueError("Unsupported unary operator")
 
     raise ValueError("Unsupported expression")

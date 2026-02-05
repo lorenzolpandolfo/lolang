@@ -1,0 +1,43 @@
+array lista_compras = ["banana", "uva", "maçã"]
+
+println("[Lista de compras] ", "&magenta")
+
+for int i=0; i<3; i=i+1 {
+    println("- ", lista_compras[i], "&green")
+}
+
+sleep(0.7)
+println("\n-- Opa, lembrei de mais algumas coisas para comprar... ")
+sleep(0.7)
+
+while true {
+
+    string item = input("\n> O que? ", "&green")
+    push(lista_compras, item)
+
+    string resposta = input("> Preciso de mais alguma coisa? (s/n) ", "&green")
+
+    if resposta != "s" {
+        break
+    }
+}
+
+
+println("\nLista finalizada: ", lista_compras, "&yellow")
+
+sleep(0.7)
+println("\nVamos revisar os itens da lista... ", "&magenta")
+sleep(0.7)
+
+for int i=0; i<length(lista_compras); i=i+1 {
+    println(" - ", lista_compras[i], "&red")
+
+    string resposta = input("\n> Continuar? (s/n) ", "&green")
+
+    if resposta != "s" {
+        break
+    }
+
+}
+
+

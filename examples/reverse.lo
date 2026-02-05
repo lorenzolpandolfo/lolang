@@ -1,0 +1,17 @@
+
+array idiomas = ["português", "inglês", "espanhol", "russo"]
+
+println("[Exemplo reversed]", "&magenta")
+println("Idiomas: ", idiomas, "&green")
+
+println("\nIdiomas ao contrário: ", reverse(idiomas), "&green")
+println()
+
+string nome = "Lorenzo"
+println("\n", nome, " ao contrário: ", reverse(nome), "&green")
+
+int valor = 100
+println("\n", valor, " ao contrário: ", reverse(valor), "&green")
+
+boolean b = false
+println("\n", b, " ao contrário: ", reverse(b), "&green")
