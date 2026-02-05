@@ -1,11 +1,11 @@
-from core.array import push_impl, pop_impl, reverse_impl
-from core.io import println_impl, print_impl, input_impl
-from core.math import abs_impl, round_impl
-from core.random import randint_impl
-from core.string import length_impl, upper_impl, lower_impl, contains_impl
-from core.datetime import now_impl
-from core.time import sleep_impl
-from core.utils import typeof_impl, evaluate_impl
+from core.libs.datetime.datetime import now_impl
+from core.libs.stdlib.array import push_impl, pop_impl, reverse_impl
+from core.libs.stdlib.io import println_impl, print_impl, input_impl
+from core.libs.stdlib.math import abs_impl, round_impl
+from core.libs.stdlib.random import randint_impl
+from core.libs.stdlib.string import length_impl, upper_impl, lower_impl, contains_impl
+from core.libs.stdlib.utils import typeof_impl, evaluate_impl
+from core.libs.time.time import sleep_impl
 
 CORE_FUNCTIONS = {
     # string

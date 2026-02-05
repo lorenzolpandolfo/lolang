@@ -2,15 +2,14 @@ import os
 import sys
 from typing import List
 
-from constants.core_functions import CORE_FUNCTIONS
+from core.constants.core_functions import CORE_FUNCTIONS
 from core.exceptions.break_loop_exception import BreakLoopException
 from core.memory import global_variables
-from core.operators import eval_expression
+from core.interpreter import interpret_expression
 from core.objects.variable import Variable
-from enums.type import Type
-from utils.interpreter_util import get_function_parameters
-from utils.log import log
-from utils.string_utils import normalize_name
+from core.enums.type import Type
+from core.utils.interpreter_util import get_function_parameters
+from core.utils.string_utils import normalize_name
 
 
 def _validate_file(file: str) -> None:
@@ -93,7 +92,7 @@ def handle_if_statement(statements: List[str], index: int) -> int:
         raise SyntaxError("Expected '{' after if condition")
 
     condition = condition[:-1].strip()
-    result = eval_expression(condition)
+    result = interpret_expression(condition)
 
     true_block, i = collect_block(statements, index + 1)
 
@@ -120,7 +119,7 @@ def handle_while_statement(statements: List[str], index: int) -> int:
     condition = condition[:-1].strip()
     block, end = collect_block(statements, index + 1)
 
-    while eval_expression(condition):
+    while interpret_expression(condition):
         try:
             execute_block(block)
         except BreakLoopException:
@@ -146,7 +145,7 @@ def handle_for_statement(statements: List[str], index: int) -> int:
     block, end = collect_block(statements, index + 1)
     interpret_statement(init)
 
-    while eval_expression(condition):
+    while interpret_expression(condition):
         try:
             execute_block(block)
             interpret_statement(increment)
@@ -237,7 +236,7 @@ def handle_variable_assignment(data: str) -> bool:
         return False
 
     left, right = data.split("=", 1)
-    right = eval_expression(right.strip())
+    right = interpret_expression(right.strip())
 
     parts = left.strip().split(" ", 1)
 

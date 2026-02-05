@@ -1,12 +1,10 @@
 import ast
-import re
 
+from core.constants.core_functions import CORE_FUNCTIONS
 from core.memory import global_variables
-from constants.core_functions import CORE_FUNCTIONS
-from utils.log import log
 
 
-def eval_expression(expr: str):
+def interpret_expression(expr: str):
     node = ast.parse(preprocess(expr), mode="eval")
     return interpret_node(node.body)
 

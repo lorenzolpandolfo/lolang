@@ -1,7 +1,7 @@
 import datetime
 
-from enums.color import Color
-from time import time
+from core.enums.color import Color
+
 
 def log(*args, **kwargs) -> None:
     msg = " ".join(map(str, args))

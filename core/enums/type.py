@@ -1,8 +1,5 @@
 from enum import Enum
 from typing import Any
-from unittest import case
-
-from utils.log import log
 
 
 class Type(Enum):

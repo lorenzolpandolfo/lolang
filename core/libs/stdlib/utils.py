@@ -1,6 +1,6 @@
 from typing import List, Any
 
-from utils.validators import validate_empty_params
+from core.utils.validators import validate_empty_params
 
 
 def typeof_impl(params: List[Any]) -> str:

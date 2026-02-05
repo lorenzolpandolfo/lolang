@@ -1,6 +1,6 @@
 from typing import List
 
-from utils.validators import validate_empty_params
+from core.utils.validators import validate_empty_params
 
 
 @validate_empty_params

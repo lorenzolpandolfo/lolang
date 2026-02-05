@@ -1,7 +1,6 @@
 from typing import Any, List
 
-from utils.log import log
-from utils.validators import validate_empty_params, validate_first_param_list, validate_list_or_string
+from core.utils.validators import validate_empty_params, validate_first_param_list, validate_list_or_string
 
 
 @validate_empty_params

@@ -1,4 +1,4 @@
-int time = 3;
+int time = 3
 
 println("Iniciando contagem...", "&magenta")
 

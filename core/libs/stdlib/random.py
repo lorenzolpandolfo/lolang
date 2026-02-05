@@ -1,8 +1,6 @@
-from collections.abc import Generator
 import time
+from collections.abc import Generator
 from typing import List
-
-from utils.log import log
 
 
 def _lcg(modulus: int, a: int, c: int, seed: int) -> Generator[int, None, None]:

@@ -1,6 +1,6 @@
 import ast
 
-from core.operators import interpret_node, preprocess
+from core.interpreter import interpret_node
 
 
 def get_function_parameters(call: str):

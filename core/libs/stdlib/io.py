@@ -1,8 +1,9 @@
-from typing import List, Callable
-from enums.color import Color
+from typing import List
+
+from core.enums.color import Color
 
 
-def sanitize_parameter(param: str) -> str:
+def _sanitize_parameter(param: str) -> str:
     return param.strip().replace('"', "")
 
 
@@ -13,7 +14,7 @@ def extract_color(params: List[str]):
     last = params[-1]
 
     if isinstance(last, str) and last.startswith("&"):
-        color_name = sanitize_parameter(last[1:].upper())
+        color_name = _sanitize_parameter(last[1:].upper())
         try:
             return params[:-1], Color[color_name]
         except KeyError:

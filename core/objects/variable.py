@@ -1,8 +1,6 @@
 from typing import Any
 
-
-from enums.type import Type
-from utils.log import log
+from core.enums.type import Type
 
 
 class Variable:
