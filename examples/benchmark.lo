@@ -1,7 +1,7 @@
 
 string antes = now()
 
-for int i=0; i<100000; i=i+1 {
+for int i=0; i<500000; i=i+1 {
     println(i)
 }
 
@@ -9,3 +9,4 @@ string depois = now()
 
 println("Horário início: ", antes)
 println("Horário final: ", depois)
+

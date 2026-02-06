@@ -1,135 +1,194 @@
 import ast
+import operator
+from typing import Any, Dict
 
 from core.constants.core_functions import CORE_FUNCTIONS
-from core.memory import global_variables
+from core.memory import GLOBAL_VARIABLES, USER_FUNCTIONS
+
+_EXPR_CACHE: Dict[str, Any] = {}
+_COMPILED_CACHE: Dict[str, Any] = {}
+
+_BINOP_HANDLERS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.Pow: operator.pow,
+    ast.Mod: operator.mod,
+    ast.FloorDiv: operator.floordiv,
+}
+
+_COMPARE_HANDLERS = {
+    ast.Eq: operator.eq,
+    ast.NotEq: operator.ne,
+    ast.Lt: operator.lt,
+    ast.LtE: operator.le,
+    ast.Gt: operator.gt,
+    ast.GtE: operator.ge,
+}
+
+_BOOLOP_HANDLERS = {
+    ast.And: all,
+    ast.Or: any,
+}
+
+_UNARYOP_HANDLERS = {
+    ast.Not: operator.not_,
+    ast.USub: operator.neg,
+    ast.UAdd: operator.pos,
+}
+
+_SPECIAL_FUNCTIONS = {
+    "root": lambda value, degree: value ** (1 / degree),
+    "equals_ignore_type": lambda a, b: str(a) == str(b),
+    "not_equals_ignore_type": lambda a, b: str(a) != str(b),
+}
 
 
 def interpret_expression(expr: str):
-    node = ast.parse(preprocess(expr), mode="eval")
-    return interpret_node(node.body)
+    if expr in _EXPR_CACHE:
+        node = _EXPR_CACHE[expr]
+    else:
+        preprocessed = preprocess(expr)
+        node = ast.parse(preprocessed, mode="eval").body
+        _EXPR_CACHE[expr] = node
+
+    return interpret_node(node)
+
 
 def preprocess(expr: str) -> str:
-    expr = expr.replace("&&", " and ")
-    expr = expr.replace("||", " or ")
-    # expr = re.sub(r'!(?!=)', ' not ', expr)
+    if expr in _COMPILED_CACHE:
+        return _COMPILED_CACHE[expr]
 
-    if "===" in expr:
-        a, b = expr.split("===", 1)
-        return f"equals_ignore_type({a.strip()}, {b.strip()})"
+    result = expr
+    if "&&" in expr:
+        result = result.replace("&&", " and ")
+    if "||" in expr:
+        result = result.replace("||", " or ")
 
-    if "!==" in expr:
-        a, b = expr.split("!==", 1)
-        return f"not_equals_ignore_type({a.strip()}, {b.strip()})"
+    if "===" in result:
+        a, b = result.split("===", 1)
+        result = f"equals_ignore_type({a.strip()}, {b.strip()})"
+    elif "!==" in result:
+        a, b = result.split("!==", 1)
+        result = f"not_equals_ignore_type({a.strip()}, {b.strip()})"
+    elif "$" in result:
+        a, b = result.split("$", 1)
+        result = f"root({a.strip()}, {b.strip()})"
 
-    if "$" in expr:
-        a, b = expr.split("$", 1)
-        return f"root({a.strip()}, {b.strip()})"
-    return expr
+    _COMPILED_CACHE[expr] = result
+    return result
 
 
 def interpret_node(node):
-    if isinstance(node, ast.Constant):
+    """Versão otimizada com dispatch table e cache"""
+    node_type = type(node)
+
+    if node_type is ast.Constant:
         return node.value
 
-    if isinstance(node, ast.Name):
-        if node.id.lower() == "true":
+    if node_type is ast.Name:
+        name = node.id
+        if name.lower() == "true":
             return True
-        elif node.id.lower() == "false":
+        if name.lower() == "false":
             return False
 
-        var = global_variables.get(node.id)
-        if not var:
-            raise ValueError(f"Variable '{node.id}' not defined")
+        var = GLOBAL_VARIABLES.get(name)
+        if var is None:
+            raise ValueError(f"Variable '{name}' not defined")
         return var.value
 
-    if isinstance(node, ast.BinOp):
+    if node_type is ast.BinOp:
         left = interpret_node(node.left)
         right = interpret_node(node.right)
 
-        if isinstance(node.op, ast.Add):
-            return left + right
-        if isinstance(node.op, ast.Sub):
-            return left - right
-        if isinstance(node.op, ast.Mult):
-            return left * right
-        if isinstance(node.op, ast.Div):
-            return left / right
-        if isinstance(node.op, ast.Pow):
-            return left ** right
-        if isinstance(node.op, ast.Mod):
-            return left % right
-        raise ValueError("Unsupported operator")
+        handler = _BINOP_HANDLERS.get(type(node.op))
+        if handler:
+            return handler(left, right)
+        raise ValueError(f"Unsupported operator: {type(node.op)}")
 
-    if isinstance(node, ast.Compare):
+    if node_type is ast.Compare:
         left = interpret_node(node.left)
         right = interpret_node(node.comparators[0])
         op = node.ops[0]
 
-        if isinstance(op, ast.Eq):
-            return left == right
-        if isinstance(op, ast.NotEq):
-            return left != right
-        if isinstance(op, ast.Lt):
-            return left < right
-        if isinstance(op, ast.LtE):
-            return left <= right
-        if isinstance(op, ast.Gt):
-            return left > right
-        if isinstance(op, ast.GtE):
-            return left >= right
+        handler = _COMPARE_HANDLERS.get(type(op))
+        if handler:
+            return handler(left, right)
+        raise ValueError(f"Unsupported comparison: {type(op)}")
 
-        raise ValueError("Unsupported comparison")
+    if node_type is ast.BoolOp:
+        op_type = type(node.op)
 
-    if isinstance(node, ast.BoolOp):
-        if isinstance(node.op, ast.And):
-            return all(interpret_node(v) for v in node.values)
+        if op_type is ast.And:
+            for value_node in node.values:
+                if not interpret_node(value_node):
+                    return False
+            return True
 
-        if isinstance(node.op, ast.Or):
-            return any(interpret_node(v) for v in node.values)
+        if op_type is ast.Or:
+            for value_node in node.values:
+                if interpret_node(value_node):
+                    return True
+            return False
 
-        raise ValueError("Unsupported boolean operator")
+        raise ValueError(f"Unsupported boolean operator: {op_type}")
 
-    if isinstance(node, ast.Call):
+    if node_type is ast.Call:
         func_name = node.func.id
+
         args = [interpret_node(arg) for arg in node.args]
 
-        if func_name == "root":
-            value, degree = args
-            return value ** (1 / degree)
+        special_func = _SPECIAL_FUNCTIONS.get(func_name)
+        if special_func:
+            return special_func(*args)
 
-        if func_name == "equals_ignore_type":
-            a, b = args
-            return str(a) == str(b)
+        core_func = CORE_FUNCTIONS.get(func_name)
+        if core_func:
+            return core_func(args)
 
-        if func_name == "not_equals_ignore_type":
-            a, b = args
-            return str(a) != str(b)
-
-        if func_name in CORE_FUNCTIONS:
-            return CORE_FUNCTIONS[func_name](args)
+        user_func = USER_FUNCTIONS.get(func_name)
+        if user_func:
+            from lolang import call_user_function
+            return call_user_function(user_func, args, False, "")
 
         raise ValueError(f"Unknown function '{func_name}'")
 
-    if isinstance(node, ast.List):
+    if node_type is ast.List:
         return [interpret_node(el) for el in node.elts]
 
-    if isinstance(node, ast.Subscript):
+    if node_type is ast.Subscript:
         value = interpret_node(node.value)
-        index = interpret_node(node.slice)
+
+        if isinstance(node.slice, ast.Index):
+            index = interpret_node(node.slice.value)
+        elif isinstance(node.slice, ast.Constant):
+            index = node.slice.value
+        else:
+            index = interpret_node(node.slice)
+
         return value[index]
 
-    if isinstance(node, ast.UnaryOp):
+    if node_type is ast.UnaryOp:
         value = interpret_node(node.operand)
+        op_type = type(node.op)
 
-        if isinstance(node.op, ast.Not):
-            return not value
+        handler = _UNARYOP_HANDLERS.get(op_type)
+        if handler:
+            return handler(value)
 
-        if isinstance(node.op, ast.USub):
-            return not -value
+        raise ValueError(f"Unsupported unary operator: {op_type}")
 
-        if isinstance(node.op, ast.UAdd):
-            return +value
+    if node_type is ast.Tuple:
+        return tuple(interpret_node(el) for el in node.elts)
 
-        raise ValueError("Unsupported unary operator")
+    if node_type is ast.Dict:
+        keys = [interpret_node(k) for k in node.keys]
+        values = [interpret_node(v) for v in node.values]
+        return dict(zip(keys, values))
 
-    raise ValueError("Unsupported expression")
+    if node_type is ast.Set:
+        return {interpret_node(el) for el in node.elts}
+
+    raise ValueError(f"Unsupported expression type: {node_type}")

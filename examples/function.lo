@@ -1,0 +1,59 @@
+println("[Criando funções: somar e subtrair]\n", "&magenta")
+
+fn int somar(int a, int b) {
+    return a + b
+}
+
+fn int subtrair(int a, int b) {
+    return a - b
+}
+
+
+int val = somar(10, 20)
+println("Retorno da função somar: ", val)
+
+int val = subtrair(10, 20)
+println("Retorno da função subtrair: ", val)
+
+
+
+println("\n[Somando para cada número em uma lista]\n", "&magenta")
+array numeros = [10, 20, 30, 40, 50, 60]
+array arr = numeros
+
+for int i=0; i<length(numeros); i=i+1 {
+    int next_number_i = i
+
+    if i === length(numeros) - 1 {
+        next_number_i = -1
+    }
+
+    int n = numeros[i]
+    int m = numeros[next_number_i + 1]
+    int v = somar(n, m)
+
+    println(" - Somando ", n, " + ", m, ": ", v, "&green")
+}
+
+int z = 0
+
+println("\n[Função: subtrair cada elemento da lista recebida]\n", "&magenta")
+
+fn int subtractArrayElements(array arr) {
+
+    for int i=0; i<length(arr); i=i+1 {
+        int next_number_i = i
+
+        if i === length(arr) - 1 {
+            next_number_i = -1
+        }
+
+        int n = arr[i]
+        int m = arr[next_number_i + 1]
+        int v = subtrair(n, m)
+
+        println(" - Subtraindo ", n, " - ", m, ": ", v, "&green")
+    }
+}
+
+subtractArrayElements(numeros)
